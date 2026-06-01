@@ -1,0 +1,380 @@
+- What is a Hook in React?
+
+    Definition:
+
+    Hooks are special React functions that allow functional components 
+    to use React features 
+    such as state, side effects, context, and DOM references.
+
+- In simple word,
+    Hook React ka special function hai jo functional components 
+    ko extra powers deta haletsi.
+
+
+------------All React Feature-------------
+
+1. useState
+   - Problem:
+
+        Maan lo tum Instagram bana rahe ho.
+
+        Ek post hai:
+
+        ❤️ Likes: 10
+
+        User Like button click karta hai.
+
+    Expected:
+
+        ❤️ Likes: 11
+
+        Lekin agar normal variable use kare:
+
+        let likes = 10;
+
+        function increaseLike() {
+        likes++;
+        }
+
+    - To memory me value change ho jayegi:
+
+        10 → 11
+
+        Lekin screen par abhi bhi:
+
+        ❤️ Likes: 10
+
+        dikhega.
+
+    - Why?
+
+        React screen ko tab update karta hai jab usko pata chale ki data change hua hai.
+
+        Normal variable change hone par React ko pata nahi chalta.
+
+        Variable Changed
+            ↓
+        React Doesn't Know
+            ↓
+        UI Not Updated
+        Solution
+
+        React ne bola:
+
+        Agar UI me dikhane wala data hai, use State me rakho.
+
+        const [likes, setLikes] = useState(10);
+
+        Ab:
+
+        setLikes(likes + 1);
+
+        React ko notification milti hai.
+
+        State Changed
+            ↓
+        React Notified
+            ↓
+        Re-render
+            ↓
+        UI Updated
+        Real Tech Example
+
+    - Instagram:
+
+        Like Count
+        Comment Count
+        Follower Count
+
+        Ye sab state hote hain.
+
+
+2. useEffect
+    - Problem:
+
+        Ab maan lo LinkedIn open hua.
+
+        Page khulte hi posts load karni hain.
+
+        Tum likhte ho:
+
+        fetch("/posts");
+
+        Component render hua:
+
+        API Call
+
+        State update hui:
+
+        API Call Again
+
+        User click kare:
+
+        API Call Again
+
+        Har render pe API call.
+
+        Server ki band baj jayegi 😂
+
+    - Why?
+
+        Component function har render pe dobara execute hota hai.
+
+        Render
+        ↓
+        Function Runs
+        ↓
+        API Call
+        Solution
+
+    - React bola:
+
+        Ye kaam render ke baad sirf ek baar chalana hai.
+
+        useEffect(() => {
+        fetch("/posts");
+        }, []);
+
+        Ab:
+
+        Page Open
+            ↓
+        Render
+            ↓
+        useEffect
+            ↓
+        API Call Once
+        Real Tech Example
+
+        LinkedIn
+
+        Fetch Posts
+        Fetch User Profile
+        Fetch Notifications
+
+        Mostly useEffect me hota hai.
+
+3. useRef
+    - Problem:
+
+        Login page open hua.
+
+        Tum chahte ho cursor automatically Email box me aa jaye.
+
+        Without useRef:
+
+        document.getElementById()
+
+        React me direct DOM manipulation avoid karte hain.
+
+    - Solution:
+        const emailRef = useRef();
+        <input ref={emailRef}/>
+        emailRef.current.focus();
+        Flow
+        Input
+        ↓
+        Reference Stored
+        ↓
+        Current Element
+        ↓
+        Focus
+        Real Tech Example
+
+        Google Login
+
+        Page open hote hi:
+
+        Cursor Email Box Me
+
+        Ye mostly useRef se hota hai.
+
+4. useContext
+    - Problem:
+
+        Tum e-commerce app bana rahe ho.
+
+        User login hua:
+
+        Abhishekh
+
+        Navbar ko username chahiye.
+
+        Profile page ko username chahiye.
+
+        Cart ko username chahiye.
+
+        Settings ko username chahiye.
+
+    - Structure:
+
+        App
+        ↓
+        Navbar
+
+        App
+        ↓
+        Profile
+
+        App
+        ↓
+        Cart
+
+        Har jagah props bhejna padega.
+
+        Prop Drilling Problem
+        App
+        ↓
+        Layout
+        ↓
+        Header
+        ↓
+        Navbar
+
+        Navbar ko username chahiye.
+
+        Lekin Layout aur Header ko nahi.
+
+        Fir bhi pass karna padega.
+
+        App → Layout → Header → Navbar
+
+        Bohot irritating.
+
+    - Solution
+
+        React bola:
+
+        Ek global storage banao.
+
+        const UserContext = createContext();
+
+        Jahan chahiye:
+
+        const user = useContext(UserContext);
+
+        Bas.
+
+        Real Tech Example
+
+        Amazon
+
+        Logged In User
+        Theme
+        Language
+        Currency
+
+        Mostly Context me store hota hai.     
+
+5. useMemo
+    - Problem:
+
+        Amazon me 50,000 products hain.
+
+        User search karta hai:
+
+        Laptop
+
+        Filter lagta hai.
+
+        Filtering me 2 second lagte hain.
+
+        Ab user sidebar open karta hai.
+
+        Filter dobara chal gaya.
+
+        Phir render.
+
+        Phir filter.
+
+        Phir render.
+
+        Again filter.
+
+        Problem Flow
+        Render
+        ↓
+        Heavy Calculation
+        ↓
+        2 Seconds
+
+        Har baar.
+
+    - Solution:
+
+        React bola:
+
+        Result save kar lo.
+
+        const products = useMemo(() => {
+        return filterProducts();
+        }, [search]);
+
+        Ab:
+
+        First Time
+            ↓
+        Calculate
+            ↓
+        Store Result
+
+        Next render:
+
+        Reuse Stored Result
+
+        Fast ⚡
+
+        Real Tech Example
+
+        Flipkart
+
+        Product Search
+        Price Filter
+        Rating Filter           
+
+
+6. useCallback
+    - Problem:
+
+        Maan lo Parent component me:
+
+        const handleClick = () => {
+        console.log("clicked");
+        }
+
+        Har render pe:
+
+        New Function
+
+        Banegi.
+
+        Again render:
+
+        New Function
+
+        Again:
+
+        New Function
+
+        Agar ye function child ko pass kar rahe ho to child bhi baar-baar re-render hoga.
+
+    - Solution:
+
+        const handleClick = useCallback(() => {
+        console.log("clicked");
+        }, []);
+
+        React function ko remember rakhega.
+
+        Create Once
+            ↓
+        Reuse Again
+        Real Tech Example
+
+        YouTube
+
+        Subscribe Button Handler
+        Like Button Handler
+        Share Button Handler
+
+        Large apps me useCallback optimization ke liye use hota hai.
