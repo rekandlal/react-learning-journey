@@ -22,31 +22,27 @@ import React, { useState } from 'react'
 
     // const [a, setA] = useState(10)
 
-    const [likes, setLikes] = useState(10)
+    const [num, setNum] = useState([10, 20, 30])
 
-    function like(){
-        setLikes(likes + 1)
-    }
+    const btnClicked = () =>{
+      const newNum = [...num]
+      newNum.push(99)
 
-    function unLike(){
-        setLikes(likes - 1)
+      setNum(newNum)
     }
 
     
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 gap-4">
       <h1 className="text-4xl font-bold text-gray-800">
-        Likes {likes}
+        Likes {num}
       </h1>
 
       <div className="flex gap-4">
-        <button onClick = {like} className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+        <button onClick = {btnClicked} className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
           Increase
         </button>
 
-        <button onClick = {unLike} className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
-          Decrease
-        </button>
 
       </div>
 
