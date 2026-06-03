@@ -22,7 +22,7 @@ import React, { useState } from 'react'
 
     // const [a, setA] = useState(10)
 
-    const [likes, setLikes] = useState(0)
+    const [likes, setLikes] = useState(10)
 
     function like(){
         setLikes(likes + 1)
